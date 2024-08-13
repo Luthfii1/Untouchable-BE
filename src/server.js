@@ -5,13 +5,12 @@ const server = require("http").createServer(app);
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const path = require("path");
-const locationRoutes = require("./routes/locationRoutes");
 const dummyLocations = require("./models/dummyLocations");
 
 // Set up middleware
 app.use(cors());
 app.use(express.json());
-app.use("/api/locations", locationRoutes);
+
 const port = process.env.PORT || 3000;
 const io = new Server(server, {
   cors: {
@@ -65,6 +64,55 @@ io.sockets.on("connection", (socket) => {
     console.log(locationData);
     io.sockets.emit("testing", locationData);
   }, 500);
+});
+
+app.get("/", (req, res) => {
+  const htmlResponse = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to Michelle 3</title>
+        <style>
+          body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+          }
+  
+          .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+          }
+  
+          h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+          }
+  
+          p {
+            color: #777;
+            font-size: 16px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Welcome to Michelle 2 Apple Developer Academy Endpoint</h1>
+          <p>Unauthorized access is strictly prohibited!</p>
+        </div>
+      </body>
+      </html>
+      `;
+  res.send(htmlResponse);
 });
 
 // Start the server
